@@ -1,3 +1,4 @@
+//Import modules
 const PORT = process.env.PORT || 3001;
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
@@ -5,10 +6,12 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 
+//Load in HTML
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
+//Define routes for notes
 app.get("/api/notes", (req, res) => {
 	let data = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
 	res.json(data);
@@ -22,6 +25,7 @@ app.get('*', function(req, res) {
 	res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
+//Define route for adding new notes
 app.post("/api/notes", (req, res) => {
 	var Note_toadd = req.body;
 	Note_toadd.id = uuidv4();
@@ -37,6 +41,7 @@ app.post("/api/notes", (req, res) => {
 	res.json(data);
 });
 
+//Define route for deleting notes
 app.delete("/api/notes/:id", (req, res) => {
 
 	let note_id = String(req.params.id);
@@ -54,6 +59,7 @@ app.delete("/api/notes/:id", (req, res) => {
 	res.json(true);
 });
 
+//Listen for requests
 app.listen(PORT, () => {
     console.log("Server is listening on Port: " + PORT);
 });
